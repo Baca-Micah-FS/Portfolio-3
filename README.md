@@ -1,21 +1,37 @@
 # Spotify App
 
-# Client side
+## Client side
 
-## Login/signup
+### App draw up
 
-## Search bar
+App structure, serverside, and client side drawn up
 
-## Libraries?
+### App design and layout
 
-## Results list
+### Login/signup form
 
-## Playlist for add, edit, and delete?
+### Search bar
+
+### Libraries?
+
+### Results list
+
+### Playlist for add, edit, and delete?
 
 # ServerSide
 
-## Node/express backend
+### Node/express backend
 
-## Mongo DB cluster for database
+server up and running on 5050
+
+### Mongo DB cluster for database
+
+cluster created and MONGODB_URI added
+
+### Models
+
+Models started
+
+### Controllers
 
 ## JWT/Brcypt for O-Auto and login
