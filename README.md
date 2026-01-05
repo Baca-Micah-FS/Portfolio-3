@@ -34,4 +34,4 @@ Models started
 
 ### Controllers
 
-## JWT/Brcypt for O-Auto and login
+### Spotify O-Auto and login.. Bcrypt?
