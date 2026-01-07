@@ -1,6 +1,8 @@
 // intialize express app. Make a server that can handle routes
 const express = require("express");
 
+const routeHandler = require("./routes");
+
 // inititalize cors package for connecting client to server
 const cors = require("cors");
 
@@ -28,6 +30,8 @@ app.use(cookieParser());
 app.get("/check", (req, res) => {
   res.json({ ok: true, message: "Server is running. Nice" });
 });
+
+app.use("/api/v1", routeHandler);
 
 app.get("/", (req, res) => {
   res.send("OK");
