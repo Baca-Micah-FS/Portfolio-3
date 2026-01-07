@@ -31,6 +31,7 @@ app.get("/check", (req, res) => {
   res.json({ ok: true, message: "Server is running. Nice" });
 });
 
+// mount routes
 app.use("/api/v1", routeHandler);
 
 app.get("/", (req, res) => {
