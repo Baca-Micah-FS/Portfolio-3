@@ -45,20 +45,6 @@ Clone the Repository
 git clone https://github.com/Baca-Micah-FS/Portfolio-3.git
 ```
 
-## Install Dependencies
-
-Server
-
-```bash
-cd server
-```
-
-Client
-
-```bash
-cd client
-```
-
 ### Server dependencies used:
 
 express
@@ -82,11 +68,13 @@ nodemon (development)
 Server
 
 ```bash
+cd server
 npm run dev
 ```
 
 Client
 
 ```bash
+cd client
 npm run dev
 ```
