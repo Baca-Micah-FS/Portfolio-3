@@ -1,3 +1,4 @@
+// Loads in environment variable from .env
 require("dotenv").config();
 
 const app = require("./app");

@@ -24,8 +24,8 @@ app.use(express.json());
 // allows server to read coookies for auth
 app.use(cookieParser());
 
-// health chekc
-app.get("/health", (req, res) => {
+// server check
+app.get("/check", (req, res) => {
   res.json({ ok: true, message: "Server is running. Nice" });
 });
 
