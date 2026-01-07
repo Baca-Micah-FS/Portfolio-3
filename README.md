@@ -1,37 +1,92 @@
 # Spotify App
 
-## Client side
+## Project Overview
 
-### App draw up
+This project is a full-stack web application that integrates with the Spotify Web API to allow users to authenticate using their Spotify account, search for artists, tracks, and albums, and save favorites to a database.
 
-App structure, serverside, and client side drawn up
+The backend is built with Node.js and Express, handles Spotify OAuth authentication, manages JWT-based session persistence, and stores user data and favorites in MongoDB Atlas.
+The frontend (React) provides the user interface for authentication and interacting with Spotify data.
 
-### App design and layout
+## Core features
 
-### Login/signup form
+Spotify OAuth login (Authorization Code Flow)
 
-### Search bar
+Secure JWT-based session persistence
 
-### Libraries?
+Backend API proxy for Spotify Web API requests
 
-### Results list
+MongoDB storage for users and saved favorites
 
-### Playlist for add, edit, and delete?
+RESTful API architecture (models, controllers, routes)
 
-# ServerSide
+Separation of frontend and backend concerns
 
-### Node/express backend
+## Prerequisites
 
-server up and running on 5050
+To run this project locally, you will need:
 
-### Mongo DB cluster for database
+Node.js (LTS version recommended)
 
-cluster created and MONGODB_URI added
+npm (comes with Node.js)
 
-### Models
+MongoDB Atlas account (free tier is sufficient)
 
-Models started
+Spotify account (free or premium)
 
-### Controllers
+Spotify Developer account with a registered OAuth application
 
-### Spotify O-Auto and login.. Bcrypt?
+A modern web browser (Chrome, Firefox, or Edge recommended)
+
+## Getting Started
+
+Clone the Repository
+
+```bash
+git clone https://github.com/Baca-Micah-FS/Portfolio-3.git
+```
+
+## Install Dependencies
+
+Server
+
+```bash
+cd server
+```
+
+Client
+
+```bash
+cd client
+```
+
+### Server dependencies used:
+
+express
+
+cors
+
+cookie-parser
+
+dotenv
+
+mongoose
+
+axios
+
+jsonwebtoken
+
+nodemon (development)
+
+## Start the application
+
+Server
+
+```bash
+npm run dev
+```
+
+Client
+
+```bash
+npm run dev
+```
