@@ -4,7 +4,7 @@ const favoriteSchema = new mongoose.Schema(
   {
     spotifyId: {
       type: String,
-      require: true,
+      required: true,
     },
 
     type: {
