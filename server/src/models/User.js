@@ -2,10 +2,8 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    spotifyUserId: {
+    googleUserId: {
       type: String,
-      required: true,
-      unique: true,
     },
 
     displayName: {
@@ -18,11 +16,15 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
 
-    imageUrl: {
+    picture: {
       type: String,
     },
 
     refreshToken: {
+      type: String,
+    },
+
+    accessToken: {
       type: String,
     },
 
