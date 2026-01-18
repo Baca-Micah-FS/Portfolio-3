@@ -1,70 +1,151 @@
 const axios = require("axios");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
 
-const login = async (req, res) => {
+const COOKIE_NAME = "auth_token";
+
+const cookieOptions = () => {
+  const isProd = process.env.NODE_ENV === "production";
+  return {
+    httpOnly: true,
+    // deploy configurations
+    secure: isProd,
+    // needed for cross deploy. Backend render.com and frontend Netlify.. Local dev vs prod
+    sameSite: isProd ? "none" : "lax",
+    // sets login life
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  };
+};
+
+const login = (req, res) => {
   const params = new URLSearchParams({
     client_id: process.env.GOOGLE_CLIENT_ID,
     redirect_uri: process.env.GOOGLE_REDIRECT_URI,
-    // comes back as a query param called code
     response_type: "code",
     scope: "profile email",
     access_type: "offline",
     prompt: "consent",
   });
 
-  const authUrl = `${GOOGLE_AUTH_URL}?${params.toString()}`;
-  res.redirect(authUrl);
-  // res.status(200).json({ authUrl, message: "login", success: true });
+  return res.redirect(`${GOOGLE_AUTH_URL}?${params.toString()}`);
 };
 
 const callback = async (req, res) => {
-  const { code } = req.query;
+  const { code, error } = req.query;
+
+  if (error) {
+    return res
+      .status(401)
+      .json({ success: false, message: "OAuth error", error });
+  }
   if (!code) {
-    res
-      .status(500)
-      .json({ message: "The callback has no auth code", success: false });
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing auth code" });
   }
 
   try {
-    const tokenResponse = await axios.post(GOOGLE_TOKEN_URL, {
-      code,
+    // code exchange
+    const tokenBody = new URLSearchParams({
+      code: String(code),
       client_id: process.env.GOOGLE_CLIENT_ID,
       client_secret: process.env.GOOGLE_CLIENT_SECRET,
       redirect_uri: process.env.GOOGLE_REDIRECT_URI,
       grant_type: "authorization_code",
     });
 
-    const { access_token } = tokenResponse.data;
-    console.log("access token:", access_token);
+    const tokenRes = await axios.post(GOOGLE_TOKEN_URL, tokenBody.toString(), {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
 
-    const userInfoResponse = await axios.get(GOOGLE_USERINFO_URL, {
+    const { access_token, refresh_token } = tokenRes.data;
+
+    // get user info
+    const meRes = await axios.get(GOOGLE_USERINFO_URL, {
       headers: { Authorization: `Bearer ${access_token}` },
     });
-    const { id, email, name, picture } = userInfoResponse.data;
-    console.log("Email", email);
-    const user = await User.create({
+
+    const { id, email, name, picture } = meRes.data;
+
+    // wrap O-Auth in JWT
+    const appJwt = jwt.sign({ userId: id, email }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN || "7d",
+    });
+
+    // persist user + JWT in DB
+    const update = {
       googleUserId: id,
       email,
-      name,
+      displayName: name,
       picture,
-      access_token,
-    });
-    res.status(200).json({ user, success: true });
-    console.log("User data", id, email, name, picture);
-  } catch (error) {
-    console.log("error");
-    res
-      .status(404)
-      .json({ message: "The callback has an error", success: false });
+      accessToken: access_token,
+      jwtToken: appJwt,
+      lastLoginAt: new Date(),
+    };
+
+    // only store refresh_token if Google returns
+    if (refresh_token) update.refreshToken = refresh_token;
+
+    await User.findOneAndUpdate(
+      { googleUserId: id },
+      { $set: update },
+      { upsert: true, new: true }
+    );
+
+    // set cookie so frontend can stay logged in
+    res.cookie(COOKIE_NAME, appJwt, cookieOptions());
+
+    // redirect to frontend after login
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    return res.redirect(frontendUrl);
+  } catch (err) {
+    console.error("Callback error:", err.response?.data || err.message);
+    return res.status(500).json({ success: false, message: "Callback failed" });
+  }
+};
+
+// frontend send user to login screen or not
+const session = async (req, res) => {
+  try {
+    const token = req.cookies[COOKIE_NAME];
+    if (!token) return res.status(200).json({ loggedIn: false });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // validate token exists in DB (JWT persistence validation)
+    const user = await User.findOne({
+      googleUserId: decoded.userId,
+      jwtToken: token,
+    }).select("googleUserId email displayName picture");
+
+    if (!user) return res.status(200).json({ loggedIn: false });
+
+    return res.status(200).json({ loggedIn: true, user });
+  } catch (err) {
+    return res.status(200).json({ loggedIn: false });
   }
 };
 
 const logout = async (req, res) => {
-  res.status(200).json({ message: "logout", success: true });
+  try {
+    const token = req.cookies[COOKIE_NAME];
+
+    // clear cookie
+    res.clearCookie(COOKIE_NAME, cookieOptions());
+
+    // remove persisted jwt from db
+    if (token) {
+      await User.updateOne({ jwtToken: token }, { $set: { jwtToken: null } });
+    }
+
+    return res.status(200).json({ success: true, message: "Logged out" });
+  } catch (err) {
+    return res.status(200).json({ success: true, message: "Logged out" });
+  }
 };
 
-module.exports = { login, callback, logout };
+module.exports = { login, callback, session, logout };

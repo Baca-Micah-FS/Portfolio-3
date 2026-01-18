@@ -4,6 +4,8 @@ const userSchema = new mongoose.Schema(
   {
     googleUserId: {
       type: String,
+      required: true,
+      unique: true,
     },
 
     displayName: {
@@ -26,6 +28,11 @@ const userSchema = new mongoose.Schema(
 
     accessToken: {
       type: String,
+    },
+
+    jwtToken: {
+      type: String,
+      defualt: null,
     },
 
     lastLoginAt: {
