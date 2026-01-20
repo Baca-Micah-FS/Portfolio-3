@@ -22,6 +22,7 @@ const cookieOptions = () => {
 };
 
 const login = (req, res) => {
+  // builds google o auth
   const params = new URLSearchParams({
     client_id: process.env.GOOGLE_CLIENT_ID,
     redirect_uri: process.env.GOOGLE_REDIRECT_URI,
@@ -31,6 +32,7 @@ const login = (req, res) => {
     prompt: "consent",
   });
 
+  //after login redirect tocall back with auth code
   return res.redirect(`${GOOGLE_AUTH_URL}?${params.toString()}`);
 };
 
@@ -49,7 +51,7 @@ const callback = async (req, res) => {
   }
 
   try {
-    // code exchange
+    // code exchange for access token after then fetch user's profile info
     const tokenBody = new URLSearchParams({
       code: String(code),
       client_id: process.env.GOOGLE_CLIENT_ID,
