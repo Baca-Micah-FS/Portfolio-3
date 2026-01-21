@@ -1,22 +1,35 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const MongoStore = require("connect-mongo").default;
+const session = require("express-session");
 
 const routes = require("./routes");
 
 const app = express();
 
 // middleware for client side
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    // allows cookies
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+    }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    },
+  })
+);
 
 // Health check
 app.get("/check", (req, res) => {

@@ -78,7 +78,7 @@ const callback = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRES_IN || "7d",
     });
 
-    // persist user + JWT in DB
+    //persist user + JWT in DB
     const update = {
       googleUserId: id,
       email,
@@ -92,14 +92,16 @@ const callback = async (req, res) => {
     // only store refresh_token if Google returns
     if (refresh_token) update.refreshToken = refresh_token;
 
-    await User.findOneAndUpdate(
+    const user = await User.findOneAndUpdate(
       { googleUserId: id },
       { $set: update },
       { upsert: true, new: true }
     );
 
+    req.session.userId = user._id;
+
     // set cookie so frontend can stay logged in
-    res.cookie(COOKIE_NAME, appJwt, cookieOptions());
+    // res.cookie(COOKIE_NAME, appJwt, cookieOptions());
 
     // redirect to frontend after login
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
@@ -132,22 +134,44 @@ const session = async (req, res) => {
   }
 };
 
-const logout = async (req, res) => {
+const getCurrentUser = async (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ user: null });
+  }
   try {
-    const token = req.cookies[COOKIE_NAME];
-
-    // clear cookie
-    res.clearCookie(COOKIE_NAME, cookieOptions());
-
-    // remove persisted jwt from db
-    if (token) {
-      await User.updateOne({ jwtToken: token }, { $set: { jwtToken: null } });
+    const user = await User.findById(req.session.userId).select(
+      "email name picture -_id"
+    );
+    if (!user) {
+      return res.status(401).json({ user: null });
     }
-
-    return res.status(200).json({ success: true, message: "Logged out" });
-  } catch (err) {
-    return res.status(200).json({ success: true, message: "Logged out" });
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch user" });
   }
 };
 
-module.exports = { login, callback, session, logout };
+const logout = async (req, res) => {
+  req.session.destroy(() => {
+    res
+      .status(200)
+      .json({ success: true, message: "Logged out of the system" });
+  });
+  // try {
+  //   const token = req.cookies[COOKIE_NAME];
+
+  //   // clear cookie
+  //   res.clearCookie(COOKIE_NAME, cookieOptions());
+
+  //   // remove persisted jwt from db
+  //   if (token) {
+  //     await User.updateOne({ jwtToken: token }, { $set: { jwtToken: null } });
+  //   }
+
+  //   return res.status(200).json({ success: true, message: "Logged out" });
+  // } catch (err) {
+  //   return res.status(200).json({ success: true, message: "Logged out" });
+  // }
+};
+
+module.exports = { login, callback, session, logout, getCurrentUser };
