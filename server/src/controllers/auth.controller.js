@@ -135,12 +135,13 @@ const session = async (req, res) => {
 };
 
 const getCurrentUser = async (req, res) => {
+  console.log("session", req.sessionID);
   if (!req.session.userId) {
     return res.status(401).json({ user: null });
   }
   try {
     const user = await User.findById(req.session.userId).select(
-      "email name picture -_id"
+      "email displayName picture -_id"
     );
     if (!user) {
       return res.status(401).json({ user: null });

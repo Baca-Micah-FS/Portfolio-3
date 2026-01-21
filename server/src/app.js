@@ -9,7 +9,12 @@ const routes = require("./routes");
 const app = express();
 
 // middleware for client side
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -37,6 +42,15 @@ app.get("/check", (req, res) => {
 });
 
 app.use("/api/v1", routes);
+
+app.use((req, res, next) => {
+  if (req.session.userId) {
+    console.log("=== GET CURRENT USER ===");
+    console.log("Session ID:", req.sessionID);
+    console.log("User ID:", req.session.userId);
+  }
+  next();
+});
 
 app.get("/", (req, res) => {
   res.send("OK");

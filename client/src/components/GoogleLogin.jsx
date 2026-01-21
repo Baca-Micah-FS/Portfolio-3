@@ -9,7 +9,9 @@ const GoogleLogin = () => {
 
   const checkAuth = async () => {
     try {
-      const response = await axios.get(`${API_URL}/auth/current-user`);
+      const response = await axios.get(`${API_URL}/auth/current-user`, {
+        withCredentials: true,
+      });
       console.log(response.data);
       setUser(response.data.user);
     } catch (error) {
@@ -38,12 +40,18 @@ const GoogleLogin = () => {
     <div>
       {user ? (
         <div>
-          <p>{user.name}</p>
+          <img
+            referrerPolicy="no-referrer"
+            src={user.picture}
+            alt="Profile"
+            style={{ borderRadius: "50%", width: "100px", height: "100px" }}
+          />
+          <p>{user.displayName}</p>
           <button onClick={handleLogout}>Log out</button>
         </div>
       ) : (
         <div>
-          <h2>Welcom log in</h2>
+          <h2>Welcome</h2>
           <button onClick={handleLogin}>Login with Google</button>
         </div>
       )}
