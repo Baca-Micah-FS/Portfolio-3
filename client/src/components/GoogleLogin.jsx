@@ -27,42 +27,28 @@ const GoogleLogin = ({ user, setUser }) => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [setUser]);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
-      setUser(null);
-    } catch (error) {
-      console.log("Failed to logout", error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
+  //     setUser(null);
+  //   } catch (error) {
+  //     console.log("Failed to logout", error);
+  //   }
+  // };
 
   const handleLogin = () => {
     window.location.href = `${API_URL}/auth/login`;
   };
 
   if (loading) return <p>Checking user credentials</p>;
+  if (user) return null;
 
   return (
     <div>
-      {user ? (
-        <div>
-          <img
-            referrerPolicy="no-referrer"
-            src={user.picture}
-            alt="Profile"
-            style={{ borderRadius: "50%", width: "100px", height: "100px" }}
-          />
-          <p>{user.displayName}</p>
-          <button onClick={handleLogout}>Log out</button>
-        </div>
-      ) : (
-        <div>
-          <h2>Welcome</h2>
-          <button onClick={handleLogin}>Login with Google</button>
-        </div>
-      )}
+      <h2>Welcome</h2>
+      <button onClick={handleLogin}>Login with Google</button>
     </div>
   );
 };

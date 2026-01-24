@@ -1,15 +1,19 @@
-const NavBar = () => {
+const NavBar = ({ isOpen, onClose }) => {
   return (
-    <div className="navContainer">
-      <nav className="navBar">
-        <p>Nav Bar</p>
-        <p>musci</p>
-        <p>movies</p>
-        <p>TV shows</p>
-        <p>podcasts</p>
-        <p>books</p>
-      </nav>
-    </div>
+    <>
+      {/* Backdrop only visible when open */}
+      {isOpen && <div className="backdrop" onClick={onClose} />}
+
+      <aside className={`navContainer ${isOpen ? "open" : ""}`}>
+        <nav className="navBar">
+          <p>Movies</p>
+          <p>TV shows</p>
+          <p>Music</p>
+          <p>Podcasts</p>
+          <p>Books</p>
+        </nav>
+      </aside>
+    </>
   );
 };
 
