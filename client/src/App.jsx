@@ -46,7 +46,8 @@ function App() {
     <div className="app">
       <Header user={user} onMenuClick={toggleNav} onLogout={handleLogout} />
       {user && <NavBar isOpen={isNavOpen} onClose={closeNav} />}
-      <main className="main">
+
+      <main className={`main ${isNavOpen ? "navOpen" : ""}`}>
         {!user ? (
           <>
             {/* <h1>main content</h1> */}

@@ -1,12 +1,10 @@
-// Added: require axios
 const axios = require("axios");
 
-// Movie search controller
 const movieController = async (req, res) => {
   // Get search term from query string
   const query = req.query.query;
 
-  // If no search term, respond with error
+  // If no search typed
   if (!query) {
     return res.status(400).json({ error: "Missing search query" });
   }
@@ -17,12 +15,12 @@ const movieController = async (req, res) => {
 
     const response = await axios.get(tmdbUrl, {
       params: {
-        api_key: process.env.TMDB_API_KEY, // your TMDB key from .env
+        api_key: process.env.TMDB_API_KEY,
         query: query,
       },
     });
 
-    // Send back the results array
+    // Send back the results array of search
     return res.status(200).json({ results: response.data.results });
   } catch (error) {
     console.error("TMDB search failed", error.message);

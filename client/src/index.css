@@ -165,7 +165,7 @@ button:focus-visible {
 .backdrop {
   position: fixed;
   top: var(--header-height);
-  left: 220px;
+  left: var(--drawer-width);
   right: 0;
   bottom: 0;
   background: var(--backdrop);
@@ -209,6 +209,10 @@ button:focus-visible {
   color: var(--color-accent);
   cursor: pointer;
   transform: scale(1.02);
+}
+
+.main.navOpen {
+  padding-left: var(--drawer-width);
 }
 
 .headerRight {
