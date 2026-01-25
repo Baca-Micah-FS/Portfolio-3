@@ -24,6 +24,8 @@
 
   --color-bg: var(--ivory);
   --color-surface: var(--sage); /* cards / header / panels */
+  --color-surface-form: #e8e5dc;
+
   --color-surface-2: #d2d3c9;
   --color-text: var(--black);
   --color-muted-text: #3b3b3b;
@@ -32,11 +34,17 @@
   --color-shadow: rgba(27, 27, 27, 0.18);
 
   --header-height: 70px;
-  --header-bg: linear-gradient(
+  /* --header-bg: linear-gradient(
     180deg,
     rgba(228, 228, 222, 0.95),
     rgba(196, 197, 186, 0.95)
+  ); */
+  --header-bg: linear-gradient(
+    180deg,
+    rgba(212, 213, 203, 0.97),
+    rgba(176, 178, 160, 0.97)
   );
+
   --header-icon: var(--moss);
   --header-title: var(--black);
 
@@ -108,8 +116,6 @@ button:focus-visible {
 
 .main {
   flex: 1;
-  display: grid;
-  place-items: center;
   padding-top: var(--header-height);
 }
 
@@ -189,13 +195,17 @@ button:focus-visible {
   flex-direction: column;
   gap: 30px;
   padding: 10px;
+}
+
+.navLink {
   font-weight: bold;
   font-size: 19px;
   color: var(--color-black);
+  text-decoration: none;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.navBar a:hover {
+.navLink:hover {
   color: var(--color-accent);
   cursor: pointer;
   transform: scale(1.02);
@@ -244,4 +254,46 @@ button:focus-visible {
 
 .profileMenu button {
   width: 100%;
+}
+
+.form-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: var(--color-surface-form);
+  border: 1px solid rgba(27, 27, 27, 0.16);
+  box-shadow: 0 20px 40px rgba(27, 27, 27, 0.12);
+  padding: 15px;
+  justify-content: center;
+  /* margin-bottom: auto; */
+  gap: 20px;
+  width: min(500px, 92%);
+  color: var(--black);
+}
+
+.input {
+  height: 40px;
+  border-radius: 9px;
+  padding: 10px;
+  width: 300px;
+}
+
+.input {
+  border: 1px solid rgba(27, 27, 27, 0.2);
+}
+.input:focus-visible {
+  outline: 3px solid rgba(89, 95, 57, 0.35);
+  outline-offset: 2px;
+}
+
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+}
+
+.btn {
+  background-color: var(--moss);
+  color: var(--color-bg);
+  font-weight: bold;
 }
