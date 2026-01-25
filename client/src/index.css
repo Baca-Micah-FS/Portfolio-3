@@ -1,5 +1,8 @@
+* {
+  box-sizing: border-box;
+}
+
 :root {
-  --header-height: 65px;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -12,21 +15,51 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* COLOR PALLETES */
+  --ivory: #e4e4de;
+  --sage: #c4c5ba;
+  --black: #1b1b1b;
+  --moss: #595f39;
+
+  --color-bg: var(--ivory);
+  --color-surface: var(--sage); /* cards / header / panels */
+  --color-surface-2: #d2d3c9;
+  --color-text: var(--black);
+  --color-muted-text: #3b3b3b;
+  --color-accent: var(--moss); /* buttons, links, highlights */
+  --color-border: rgba(27, 27, 27, 0.18);
+  --color-shadow: rgba(27, 27, 27, 0.18);
+
+  --header-height: 70px;
+  --header-bg: linear-gradient(
+    180deg,
+    rgba(228, 228, 222, 0.95),
+    rgba(196, 197, 186, 0.95)
+  );
+  --header-icon: var(--moss);
+  --header-title: var(--black);
+
+  --drawer-width: 200px;
+  --drawer-bg: var(--sage);
+  --backdrop: rgba(27, 27, 27, 0.35);
 }
 
-a {
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
 a:hover {
   color: #535bf2;
-}
+} */
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 /* h1 {
@@ -77,6 +110,7 @@ button:focus-visible {
   flex: 1;
   display: grid;
   place-items: center;
+  padding-top: var(--header-height);
 }
 
 .header {
@@ -84,11 +118,17 @@ button:focus-visible {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding-inline: 12px;
-  position: relative;
+  padding: 15px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 2000;
-
-  border: 2px solid black;
+  /* background: linear-gradient(to bottom, #f7f8fa, #eceff3); */
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--color-border);
+  /* overflow: hidden; */
 }
 
 .hamburger {
@@ -113,18 +153,19 @@ button:focus-visible {
 .headerTitle {
   font-size: 2rem;
   margin: 0;
+  color: var(--header-title);
 }
 
-/* Backdrop sits below header but above page content */
 .backdrop {
   position: fixed;
-  inset: 0;
   top: var(--header-height);
-  background: rgba(0, 0, 0, 0.4);
+  left: 220px;
+  right: 0;
+  bottom: 0;
+  background: var(--backdrop);
   z-index: 1500;
 }
 
-/* Nav drawer (slides under header) */
 .navContainer {
   position: fixed;
   top: var(--header-height);
@@ -133,7 +174,8 @@ button:focus-visible {
   height: calc(100vh - var(--header-height));
   padding: 10px;
   z-index: 1600;
-
+  /* background: var(--drawer-bg);
+  border-right: 1px solid var(--color-border); */
   transform: translateX(-100%);
   transition: transform 250ms ease;
 }
@@ -145,7 +187,18 @@ button:focus-visible {
 .navBar {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 19px;
+  color: var(--color-black);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.navBar a:hover {
+  color: var(--color-accent);
+  cursor: pointer;
+  transform: scale(1.02);
 }
 
 .headerRight {

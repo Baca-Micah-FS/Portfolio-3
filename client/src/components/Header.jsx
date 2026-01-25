@@ -1,18 +1,35 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { MdVideoLibrary } from "react-icons/md";
 
 const Header = ({ user, onMenuClick, onLogout }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  // swapping opposite state
+  const profileRef = useRef(null);
+
   const toggleProfile = () => setIsProfileOpen((prev) => !prev);
 
   const handleLogoutClick = async () => {
-    // Optional: close the dropdown immediately for snappy UI
     setIsProfileOpen(false);
     await onLogout();
   };
+
+  //  click outside to make logout button disappear
+  useEffect(() => {
+    if (!isProfileOpen) return;
+
+    const handleClickOutside = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isProfileOpen]);
 
   return (
     <header className="header">
@@ -26,12 +43,11 @@ const Header = ({ user, onMenuClick, onLogout }) => {
         </button>
       )}
 
-      <MdVideoLibrary size={30} color="green" />
+      <MdVideoLibrary size={30} color="#595f39" />
       <h1 className="headerTitle">Playground Media</h1>
 
-      {/* Right side */}
       {user && (
-        <div className="headerRight">
+        <div className="headerRight" ref={profileRef}>
           <button
             className="avatarBtn"
             onClick={toggleProfile}

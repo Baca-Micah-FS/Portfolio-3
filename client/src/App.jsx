@@ -39,6 +39,7 @@ function App() {
       <Header user={user} onMenuClick={toggleNav} onLogout={handleLogout} />
       {user && <NavBar isOpen={isNavOpen} onClose={closeNav} />}
       <main className="main">
+        <h1>main content</h1>
         <GoogleLogin user={user} setUser={setUser} />
       </main>
     </div>
