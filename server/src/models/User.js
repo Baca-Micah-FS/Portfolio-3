@@ -32,12 +32,24 @@ const userSchema = new mongoose.Schema(
 
     jwtToken: {
       type: String,
-      defualt: null,
+      default: null,
     },
 
     lastLoginAt: {
       type: Date,
     },
+
+    watchlist: [
+      {
+        tmdbId: Number,
+        title: String,
+        poster_path: String,
+        overview: String,
+        release_date: String,
+        vote_average: Number,
+        addedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );

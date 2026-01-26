@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const movieRoutes = require("./movies.routes");
+const watchlistRoutes = require("./watchlist.routes");
+
+router.use("/watchlist", watchlistRoutes);
 
 const authRoutes = require("./auth.routes");
 

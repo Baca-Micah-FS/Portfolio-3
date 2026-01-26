@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { FcGoogle } from "react-icons/fc";
 
 const API_URL = "http://localhost:5050/api/v1";
 
@@ -46,9 +47,11 @@ const GoogleLogin = ({ user, setUser }) => {
   if (user) return null;
 
   return (
-    <div>
+    <div className="loginBox">
       <h2>Welcome</h2>
-      <button onClick={handleLogin}>Login with Google</button>
+      <button onClick={handleLogin}>
+        Login with Google <FcGoogle size={22} />
+      </button>
     </div>
   );
 };

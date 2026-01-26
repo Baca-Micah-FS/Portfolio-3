@@ -12,6 +12,7 @@ import PodcastPage from "./pages/PodcastPage";
 import AudioBooksPage from "./pages/AudioBooksPage";
 import WatchList from "./pages/WatchList";
 import HomePage from "./pages/HomePage";
+import { Toaster } from "react-hot-toast";
 
 const API_URL = "http://localhost:5050/api/v1";
 
@@ -44,7 +45,11 @@ function App() {
       <Header user={user} onMenuClick={toggleNav} onLogout={handleLogout} />
       {user && <NavBar isOpen={isNavOpen} onClose={closeNav} />}
 
-      <main className={`main ${isNavOpen ? "navOpen" : ""}`}>
+      <main
+        className={`main ${isNavOpen ? "navOpen" : ""} ${
+          !user ? "authCenter" : ""
+        }`}
+      >
         {!user ? (
           <>
             {/* <h1>main content</h1> */}
@@ -62,6 +67,7 @@ function App() {
           </Routes>
         )}
       </main>
+      <Toaster position="bottom-center" />
     </div>
   );
 }
