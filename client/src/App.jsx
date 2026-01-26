@@ -1,6 +1,3 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import "./App.css";
 import GoogleLogin from "./components/GoogleLogin";
 import NavBar from "./components/NavBar";
@@ -13,7 +10,7 @@ import TvShows from "./pages/TvShowsPage";
 import MusicPage from "./pages/MusicPage";
 import PodcastPage from "./pages/PodcastPage";
 import AudioBooksPage from "./pages/AudioBooksPage";
-import WatchedPage from "./pages/WatchedPage";
+import WatchList from "./pages/WatchList";
 import HomePage from "./pages/HomePage";
 
 const API_URL = "http://localhost:5050/api/v1";
@@ -61,7 +58,7 @@ function App() {
             <Route path="/music" element={<MusicPage />}></Route>
             <Route path="/podcasts" element={<PodcastPage />}></Route>
             <Route path="/books" element={<AudioBooksPage />}></Route>
-            <Route path="/watched" element={<WatchedPage />}></Route>
+            <Route path="/watch-list" element={<WatchList />}></Route>
           </Routes>
         )}
       </main>

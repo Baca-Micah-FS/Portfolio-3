@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { MdVideoLibrary } from "react-icons/md";
+import { NavLink } from "react-router-dom";
+import { BsBookmarkHeartFill } from "react-icons/bs";
 
 const Header = ({ user, onMenuClick, onLogout }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -47,21 +49,28 @@ const Header = ({ user, onMenuClick, onLogout }) => {
       <h1 className="headerTitle">Playground Media</h1>
 
       {user && (
-        <div className="headerRight" ref={profileRef}>
-          <button
-            className="avatarBtn"
-            onClick={toggleProfile}
-            aria-label="Open profile menu"
-          >
-            <img className="avatarImg" src={user.picture} alt="Profile" />
-          </button>
+        <>
+          <div className="headerRight" ref={profileRef}>
+            <NavLink to="/watch-list" className="watchLink watch-list">
+              <BsBookmarkHeartFill size={23} />
+              <span>Watchlist</span>
+            </NavLink>
 
-          {isProfileOpen && (
-            <div className="profileMenu" role="menu">
-              <button onClick={handleLogoutClick}>Log out</button>
-            </div>
-          )}
-        </div>
+            <button
+              className="avatarBtn"
+              onClick={toggleProfile}
+              aria-label="Open profile menu"
+            >
+              <img className="avatarImg" src={user.picture} alt="Profile" />
+            </button>
+
+            {isProfileOpen && (
+              <div className="profileMenu" role="menu">
+                <button onClick={handleLogoutClick}>Log out</button>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </header>
   );

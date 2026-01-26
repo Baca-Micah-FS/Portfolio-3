@@ -301,3 +301,28 @@ button:focus-visible {
   color: var(--color-bg);
   font-weight: bold;
 }
+
+.watch-list {
+  font-weight: bold;
+  font-size: 19px;
+  color: var(--color-black);
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  padding: 10px;
+}
+
+.watch-list:hover {
+  color: var(--color-accent);
+  cursor: pointer;
+  transform: scale(1.02);
+}
+
+.watchLink {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* snug spacing */
+}
+
+.watchLink svg {
+  display: block;
+}

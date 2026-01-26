@@ -56,13 +56,13 @@ const NavBar = ({ isOpen, onClose }) => {
             Audio Books
           </NavLink>
 
-          <NavLink
+          {/* <NavLink
             onClick={onClose}
             to="/watched"
             className={({ isActive }) => `navLink ${isActive ? "active" : ""}`}
           >
             Watched
-          </NavLink>
+          </NavLink> */}
         </nav>
       </aside>
     </>
