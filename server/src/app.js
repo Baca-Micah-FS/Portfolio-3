@@ -8,7 +8,6 @@ const routes = require("./routes");
 
 const app = express();
 
-// middleware for client side
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -28,7 +27,7 @@ app.use(
       mongoUrl: process.env.MONGODB_URI,
     }),
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -36,21 +35,19 @@ app.use(
   })
 );
 
-// Health check
-app.get("/check", (req, res) => {
-  res.json({ ok: true, message: "Server is running. Nice" });
-});
-
-app.use("/api/v1", routes);
-
 app.use((req, res, next) => {
-  if (req.session.userId) {
-    console.log("=== GET CURRENT USER ===");
+  if (req.session?.userId) {
     console.log("Session ID:", req.sessionID);
     console.log("User ID:", req.session.userId);
   }
   next();
 });
+
+app.get("/check", (req, res) => {
+  res.json({ ok: true, message: "Server is running. Nice" });
+});
+
+app.use("/api/v1", routes);
 
 app.get("/", (req, res) => {
   res.send("OK");

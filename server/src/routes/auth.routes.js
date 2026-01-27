@@ -7,8 +7,10 @@ const authController = require("../controllers/auth.controller");
 router.get("/login", authController.login);
 router.get("/callback", authController.callback);
 
-// Session status front end
 router.get("/session", authController.session);
+
+router.post("/refresh", authController.refresh);
+router.get("/token-status", authController.tokenStatus);
 
 router.post("/logout", authController.logout);
 router.get("/current-user", authController.getCurrentUser);

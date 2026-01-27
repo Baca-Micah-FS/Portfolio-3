@@ -18,11 +18,41 @@ const API_URL = "http://localhost:5050/api/v1";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [isNavOpen, setIsNavOpen] = useState(false);
 
-  // flips isNavOpen to the opposite of what it is instead of setting that hard
   const toggleNav = () => setIsNavOpen((prev) => !prev);
   const closeNav = () => setIsNavOpen(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/auth/session`, {
+          withCredentials: true,
+        });
+
+        if (cancelled) return;
+
+        if (response.data.loggedIn) {
+          setUser(response.data.user);
+        } else {
+          setUser(null);
+        }
+      } catch {
+        if (!cancelled) setUser(null);
+      } finally {
+        if (!cancelled) setAuthLoading(false);
+      }
+    };
+
+    checkAuth();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -31,14 +61,25 @@ function App() {
       console.log("Failed to logout", error);
     } finally {
       setUser(null);
-      setIsNavOpen(false); // closes nav too
+      setIsNavOpen(false);
     }
   };
 
-  // on page load run everytime user logic
   useEffect(() => {
     if (!user) setIsNavOpen(false);
   }, [user]);
+
+  // broken avtar image fallabck
+  if (authLoading) {
+    return (
+      <div className="app">
+        <main className="main authCenter">
+          <p>Checking user credentials</p>
+        </main>
+        <Toaster position="bottom-center" />
+      </div>
+    );
+  }
 
   return (
     <div className="app">
@@ -52,7 +93,6 @@ function App() {
       >
         {!user ? (
           <>
-            {/* <h1>main content</h1> */}
             <GoogleLogin user={user} setUser={setUser} />
           </>
         ) : (
@@ -67,6 +107,7 @@ function App() {
           </Routes>
         )}
       </main>
+
       <Toaster position="bottom-center" />
     </div>
   );

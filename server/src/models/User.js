@@ -10,8 +10,6 @@ const userSchema = new mongoose.Schema(
 
     displayName: {
       type: String,
-      //   required: true,
-      //   unique: true,
     },
 
     email: {
@@ -28,6 +26,10 @@ const userSchema = new mongoose.Schema(
 
     accessToken: {
       type: String,
+    },
+
+    accessTokenExpiresAt: {
+      type: Date,
     },
 
     jwtToken: {

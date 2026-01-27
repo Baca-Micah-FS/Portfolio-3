@@ -6,19 +6,6 @@ const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
 
-const COOKIE_NAME = "auth_token";
-
-const cookieOptions = () => {
-  const isProd = process.env.NODE_ENV === "production";
-  return {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? "none" : "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  };
-};
-
-// redirect on cancel helper
 const getFrontendRedirect = (path = "/", params = {}) => {
   const base = process.env.FRONTEND_URL || "http://localhost:5173";
   const url = new URL(path, base);
@@ -48,7 +35,6 @@ const login = (req, res) => {
 const callback = async (req, res) => {
   const { code, error } = req.query;
 
-  // front end redirect on cancle
   if (error) {
     return res.redirect(
       getFrontendRedirect("/", { auth: "failed", reason: error })
@@ -57,10 +43,7 @@ const callback = async (req, res) => {
 
   if (!code) {
     return res.redirect(
-      getFrontendRedirect("/", {
-        auth: "failed",
-        reason: "missing_code",
-      })
+      getFrontendRedirect("/", { auth: "failed", reason: "missing_code" })
     );
   }
 
@@ -77,7 +60,11 @@ const callback = async (req, res) => {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
 
-    const { access_token, refresh_token } = tokenRes.data;
+    const { access_token, refresh_token, expires_in } = tokenRes.data;
+
+    const accessTokenExpiresAt = expires_in
+      ? new Date(Date.now() + expires_in * 1000)
+      : null;
 
     const meRes = await axios.get(GOOGLE_USERINFO_URL, {
       headers: { Authorization: `Bearer ${access_token}` },
@@ -95,10 +82,12 @@ const callback = async (req, res) => {
       displayName: name,
       picture,
       accessToken: access_token,
+      accessTokenExpiresAt,
       jwtToken: appJwt,
       lastLoginAt: new Date(),
     };
 
+    // store refrsh token
     if (refresh_token) update.refreshToken = refresh_token;
 
     const user = await User.findOneAndUpdate(
@@ -109,45 +98,47 @@ const callback = async (req, res) => {
 
     req.session.userId = user._id;
 
-    // redirect to frontend after login
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-    return res.redirect(frontendUrl);
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.redirect(
+          getFrontendRedirect("/", {
+            auth: "failed",
+            reason: "session_save_failed",
+          })
+        );
+      }
+
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+      return res.redirect(frontendUrl);
+    });
   } catch (err) {
     console.error("Callback error:", err.response?.data || err.message);
-
-    // on cancel redirect user back to frontend login
     return res.redirect(
-      getFrontendRedirect("/", {
-        auth: "failed",
-        reason: "callback_failed",
-      })
+      getFrontendRedirect("/", { auth: "failed", reason: "callback_failed" })
     );
   }
 };
 
-// frontend send user to login screen or not
 const session = async (req, res) => {
   try {
-    const token = req.cookies[COOKIE_NAME];
-    if (!token) return res.status(200).json({ loggedIn: false });
+    if (!req.session?.userId) {
+      return res.status(200).json({ loggedIn: false });
+    }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await User.findOne({
-      googleUserId: decoded.userId,
-      jwtToken: token,
-    }).select("googleUserId email displayName picture");
+    const user = await User.findById(req.session.userId).select(
+      "email displayName picture"
+    );
 
     if (!user) return res.status(200).json({ loggedIn: false });
 
     return res.status(200).json({ loggedIn: true, user });
-  } catch (err) {
+  } catch {
     return res.status(200).json({ loggedIn: false });
   }
 };
 
 const getCurrentUser = async (req, res) => {
-  console.log("session", req.sessionID);
   if (!req.session.userId) {
     return res.status(401).json({ user: null });
   }
@@ -155,11 +146,9 @@ const getCurrentUser = async (req, res) => {
     const user = await User.findById(req.session.userId).select(
       "email displayName picture -_id"
     );
-    if (!user) {
-      return res.status(401).json({ user: null });
-    }
+    if (!user) return res.status(401).json({ user: null });
     res.json({ user });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to fetch user" });
   }
 };
@@ -172,4 +161,85 @@ const logout = async (req, res) => {
   });
 };
 
-module.exports = { login, callback, session, logout, getCurrentUser };
+// Refresh Google access token using saved refreshToken
+const refresh = async (req, res) => {
+  if (!req.session?.userId) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+
+  try {
+    const user = await User.findById(req.session.userId).select("refreshToken");
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (!user.refreshToken) {
+      return res.status(400).json({
+        error: "No refresh token stored. Re-login with Google to get one.",
+      });
+    }
+
+    const body = new URLSearchParams({
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      refresh_token: user.refreshToken,
+      grant_type: "refresh_token",
+    });
+
+    const tokenRes = await axios.post(GOOGLE_TOKEN_URL, body.toString(), {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
+
+    const { access_token, expires_in } = tokenRes.data;
+
+    const accessTokenExpiresAt = expires_in
+      ? new Date(Date.now() + expires_in * 1000)
+      : null;
+
+    await User.findByIdAndUpdate(req.session.userId, {
+      $set: {
+        accessToken: access_token,
+        accessTokenExpiresAt,
+        lastLoginAt: new Date(),
+      },
+    });
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error("Refresh error:", err.response?.data || err.message);
+    return res.status(500).json({ error: "Failed to refresh access token" });
+  }
+};
+
+// tru false route for access token
+const tokenStatus = async (req, res) => {
+  try {
+    if (!req.session?.userId) return res.status(200).json({ ok: false });
+
+    const user = await User.findById(req.session.userId).select(
+      "accessToken accessTokenExpiresAt refreshToken"
+    );
+
+    if (!user || !user.accessToken) return res.status(200).json({ ok: false });
+
+    const expired =
+      user.accessTokenExpiresAt &&
+      new Date(user.accessTokenExpiresAt).getTime() <= Date.now();
+
+    return res.status(200).json({
+      ok: !expired,
+      expired: !!expired,
+      canRefresh: !!user.refreshToken,
+    });
+  } catch {
+    return res.status(200).json({ ok: false });
+  }
+};
+
+module.exports = {
+  login,
+  callback,
+  session,
+  logout,
+  getCurrentUser,
+  refresh,
+  tokenStatus,
+};

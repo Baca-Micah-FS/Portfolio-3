@@ -6,7 +6,6 @@ import { BsBookmarkHeartFill } from "react-icons/bs";
 
 const Header = ({ user, onMenuClick, onLogout }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
   const profileRef = useRef(null);
 
   const toggleProfile = () => setIsProfileOpen((prev) => !prev);
@@ -16,7 +15,6 @@ const Header = ({ user, onMenuClick, onLogout }) => {
     await onLogout();
   };
 
-  //  click outside to make logout button disappear
   useEffect(() => {
     if (!isProfileOpen) return;
 
@@ -61,7 +59,16 @@ const Header = ({ user, onMenuClick, onLogout }) => {
               onClick={toggleProfile}
               aria-label="Open profile menu"
             >
-              <img className="avatarImg" src={user.picture} alt="Profile" />
+              {user?.picture ? (
+                <img
+                  className="avatarImg"
+                  src={user.picture}
+                  alt="Profile"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="avatarImg avatarFallback" aria-hidden="true" />
+              )}
             </button>
 
             {isProfileOpen && (
