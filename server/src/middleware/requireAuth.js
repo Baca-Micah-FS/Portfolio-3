@@ -18,6 +18,12 @@ const refresh = async (req, res, next) => {
       });
     }
 
+    // added guard
+    if (!user.accessTokenExpiresAt) {
+      req.minutesTilExpiresIn = null;
+      return next();
+    }
+
     const differenceInDate = user.accessTokenExpiresAt.getTime() - Date.now();
 
     const minutes = Math.floor(differenceInDate / (1000 * 60));
