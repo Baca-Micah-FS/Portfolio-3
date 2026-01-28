@@ -1,23 +1,35 @@
-# Spotify App
+# MediaHub App
 
 ## Project Overview
 
-This project is a full-stack web application that integrates with the Spotify Web API to allow users to authenticate using their Spotify account, search for artists, tracks, and albums, and save favorites to a database.
+This project is a full-stack web application that integrates with Google OAuth and a third-party movie API (TMDB) to allow users to authenticate using their Google account, search for movies, and save titles to a personal watchlist.
 
-The backend is built with Node.js and Express, handles Spotify OAuth authentication, manages JWT-based session persistence, and stores user data and favorites in MongoDB Atlas.
-The frontend (React) provides the user interface for authentication and interacting with Spotify data.
+The backend is built with Node.js and Express, handles Google OAuth authentication, manages session-based login persistence and JWT issuance, refreshes Google access tokens when needed, and stores user data and saved movies in MongoDB Atlas.
+The frontend (React) provides the user interface for authentication, searching media, and managing a watchlist.
 
 ## Core features
 
-Spotify OAuth login (Authorization Code Flow)
+Google OAuth login (Authorization Code Flow)
 
-Secure JWT-based session persistence
+Session-based authentication with MongoDB session store
 
-Backend API proxy for Spotify Web API requests
+JWT creation and validation for application use
 
-MongoDB storage for users and saved favorites
+Google access token refresh using stored refresh tokens
+
+Backend API proxy for TMDB movie searches
+
+MongoDB storage for users and saved watchlist items
 
 RESTful API architecture (models, controllers, routes)
+
+Protected backend routes requiring authentication
+
+Watchlist add/remove functionality
+
+Toast notifications for user feedback
+
+Responsive media card layout
 
 Separation of frontend and backend concerns
 
@@ -31,9 +43,11 @@ npm (comes with Node.js)
 
 MongoDB Atlas account (free tier is sufficient)
 
-Spotify account (free or premium)
+Google account
 
-Spotify Developer account with a registered OAuth application
+Google Cloud project with OAuth credentials
+
+TMDB API key
 
 A modern web browser (Chrome, Firefox, or Edge recommended)
 
@@ -45,7 +59,7 @@ Clone the Repository
 git clone https://github.com/Baca-Micah-FS/Portfolio-3.git
 ```
 
-### Server dependencies used:
+## Server dependencies used:
 
 express
 
@@ -61,20 +75,26 @@ axios
 
 jsonwebtoken
 
+express-session
+
+connect-mongo
+
 nodemon (development)
 
-## Start the application
+Start the application
 
-Server
+## Server
 
 ```bash
 cd server
+npm install
 npm run dev
 ```
 
-Client
+## Client
 
 ```bash
 cd client
+npm install
 npm run dev
 ```
