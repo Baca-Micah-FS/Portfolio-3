@@ -5,8 +5,9 @@ const {
   addToWatchlist,
   removeFromWatchlist,
 } = require("../controllers/watchlist.controller");
+const middleWare = require("../middleware/requireAuth");
 
-router.get("/", getWatchlist);
+router.get("/", middleWare.refresh, getWatchlist);
 
 router.post("/", addToWatchlist);
 

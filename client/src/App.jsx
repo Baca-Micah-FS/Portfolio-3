@@ -37,6 +37,14 @@ function App() {
 
         if (response.data.loggedIn) {
           setUser(response.data.user);
+          // const refreshRequst = await axios.post(
+          //   `${API_URL}/auth/refresh`,
+          //   {},
+          //   {
+          //     withCredentials: true,
+          //   }
+          // );
+          // console.log(refreshRequst.data);
         } else {
           setUser(null);
         }

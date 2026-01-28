@@ -121,6 +121,7 @@ const callback = async (req, res) => {
 };
 
 const session = async (req, res) => {
+  console.log("getting current user", req.minutesTilExpiresIn);
   try {
     if (!req.session?.userId) {
       return res.status(200).json({ loggedIn: false });
@@ -139,6 +140,7 @@ const session = async (req, res) => {
 };
 
 const getCurrentUser = async (req, res) => {
+  console.log("getting current user");
   if (!req.session.userId) {
     return res.status(401).json({ user: null });
   }
@@ -162,52 +164,52 @@ const logout = async (req, res) => {
 };
 
 // Refresh Google access token using saved refreshToken
-const refresh = async (req, res) => {
-  if (!req.session?.userId) {
-    return res.status(401).json({ error: "Not logged in" });
-  }
+// const refresh = async (req, res) => {
+//   if (!req.session?.userId) {
+//     return res.status(401).json({ error: "Not logged in" });
+//   }
 
-  try {
-    const user = await User.findById(req.session.userId).select("refreshToken");
-    if (!user) return res.status(404).json({ error: "User not found" });
+//   try {
+//     const user = await User.findById(req.session.userId).select("refreshToken");
+//     if (!user) return res.status(404).json({ error: "User not found" });
+//     console.log("refresh?");
+//     if (!user.refreshToken) {
+//       return res.status(400).json({
+//         error: "No refresh token stored. Re-login with Google to get one.",
+//       });
+//     }
 
-    if (!user.refreshToken) {
-      return res.status(400).json({
-        error: "No refresh token stored. Re-login with Google to get one.",
-      });
-    }
+//     const body = new URLSearchParams({
+//       client_id: process.env.GOOGLE_CLIENT_ID,
+//       client_secret: process.env.GOOGLE_CLIENT_SECRET,
+//       refresh_token: user.refreshToken,
+//       grant_type: "refresh_token",
+//     });
 
-    const body = new URLSearchParams({
-      client_id: process.env.GOOGLE_CLIENT_ID,
-      client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      refresh_token: user.refreshToken,
-      grant_type: "refresh_token",
-    });
+//     const tokenRes = await axios.post(GOOGLE_TOKEN_URL, body.toString(), {
+//       headers: { "Content-Type": "application/x-www-form-urlencoded" },
+//     });
 
-    const tokenRes = await axios.post(GOOGLE_TOKEN_URL, body.toString(), {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    });
+//     const { access_token, expires_in } = tokenRes.data;
 
-    const { access_token, expires_in } = tokenRes.data;
+//     const accessTokenExpiresAt = expires_in
+//       ? new Date(Date.now() + expires_in * 1000)
+//       : null;
 
-    const accessTokenExpiresAt = expires_in
-      ? new Date(Date.now() + expires_in * 1000)
-      : null;
+//     await User.findByIdAndUpdate(req.session.userId, {
+//       $set: {
+//         accessToken: access_token,
+//         accessTokenExpiresAt,
+//         lastLoginAt: new Date(),
+//       },
+//     });
 
-    await User.findByIdAndUpdate(req.session.userId, {
-      $set: {
-        accessToken: access_token,
-        accessTokenExpiresAt,
-        lastLoginAt: new Date(),
-      },
-    });
-
-    return res.status(200).json({ success: true });
-  } catch (err) {
-    console.error("Refresh error:", err.response?.data || err.message);
-    return res.status(500).json({ error: "Failed to refresh access token" });
-  }
-};
+//     return res.status(200).json({ success: true });
+//   } catch (err) {
+//     console.error("Refresh error:", err.response?.data || err.message);
+//     return res.status(500).json({ error: "Failed to refresh access token" });
+//   }
+// };
 
 // tru false route for access token
 const tokenStatus = async (req, res) => {
@@ -240,6 +242,6 @@ module.exports = {
   session,
   logout,
   getCurrentUser,
-  refresh,
+  // refresh,
   tokenStatus,
 };
