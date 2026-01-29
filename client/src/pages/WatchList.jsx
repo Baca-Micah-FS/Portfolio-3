@@ -69,14 +69,12 @@ const WatchListPage = () => {
     <section className="watchlistPage">
       <div className="watchlistHeader">
         <h1 className="watchlistTitle">Your Watchlist</h1>
-        <p className="watchlistSub"></p>
       </div>
 
-      {loading && <p className="watchlistStatus">Loading…</p>}
-
-      {!loading && watchlist.length === 0 && (
-        <p className="watchlistStatus">No saved movies yet.</p>
-      )}
+      <div className="watchlistStatus">
+        {/* {loading && <p>Loading…</p>} */}
+        {!loading && watchlist.length === 0 && <p>No saved movies yet.</p>}
+      </div>
 
       {!loading && watchlist.length > 0 && (
         <div className="resultsGrid">

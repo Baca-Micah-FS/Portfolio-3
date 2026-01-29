@@ -1,4 +1,6 @@
 import { useState } from "react";
+import RatingStars from "./RatingStars";
+import { getStarRating } from "../utils/formatRating";
 
 const MovieCard = ({
   movie,
@@ -16,7 +18,7 @@ const MovieCard = ({
 
   const dateLabel = release_date
     ? new Date(release_date).toLocaleDateString("en-US", {
-        month: "long",
+        month: "short",
         day: "numeric",
         year: "numeric",
       })
@@ -30,7 +32,7 @@ const MovieCard = ({
 
       <div className="card-info">
         <p className="label">
-          Title: <span className="value">{title}</span>
+          Title: <span className="value titleClamp ">{title}</span>
         </p>
 
         <p className="label">
@@ -54,19 +56,28 @@ const MovieCard = ({
           Release Date: <span className="value">{dateLabel}</span>
         </p>
 
-        <p className="label">
-          Rating: <span className="value">{vote_average ?? "—"}</span>
-        </p>
+        {/* <p className="label">
+          Rating: 🎥{" "}
+          <span className="value">{Math.floor(vote_average) ?? "—"}</span>
+        </p> */}
+        <div className="cardFooter">
+          <div className="ratingRow">
+            <RatingStars rating={getStarRating(movie.vote_average)} />
+            <span className="ratingNumber">
+              {movie.vote_average.toFixed(1)}
+            </span>
+          </div>
 
-        <button
-          className={`btn saveBtn ${
-            actionVariant === "danger" ? "dangerBtn" : ""
-          }`}
-          type="button"
-          onClick={() => onAddToWatchlist?.(movie)}
-        >
-          {actionLabel}
-        </button>
+          <button
+            className={`btn saveBtn ${
+              actionVariant === "danger" ? "dangerBtn" : ""
+            }`}
+            type="button"
+            onClick={() => onAddToWatchlist?.(movie)}
+          >
+            {actionLabel}
+          </button>
+        </div>
       </div>
     </article>
   );

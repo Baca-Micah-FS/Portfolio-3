@@ -82,7 +82,9 @@ function App() {
     return (
       <div className="app">
         <main className="main authCenter">
-          <p>Checking user credentials</p>
+          <div className="watchlistLoading">
+            <p className="credentials">Checking user credentials</p>
+          </div>
         </main>
         <Toaster position="bottom-center" />
       </div>
