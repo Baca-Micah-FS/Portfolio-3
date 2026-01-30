@@ -1,12 +1,12 @@
 const express = require("express");
-
 const router = express.Router();
 
-const movieController = require("../controllers/movie.controller");
-const middleWare = require("../middleware/requireAuth");
+const searchMoviesController = require("../controllers/movies.search.controller");
+const trendingMoviesController = require("../controllers/movies.trending.controller");
 
-router.get("/trending", movieController);
+// const middleWare = require("../middleware/requireAuth");
 
-router.get("/search", movieController);
+router.get("/trending", trendingMoviesController);
+router.get("/search", searchMoviesController);
 
 module.exports = router;

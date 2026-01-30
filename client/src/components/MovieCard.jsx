@@ -8,7 +8,8 @@ const MovieCard = ({
   actionLabel = "+ Save to Watchlist",
   actionVariant = "primary",
 }) => {
-  const { title, poster_path, overview, release_date, vote_average } = movie;
+  // vote_average
+  const { title, poster_path, overview, release_date } = movie;
 
   const [isExpanded, setIsExpanded] = useState(false);
 

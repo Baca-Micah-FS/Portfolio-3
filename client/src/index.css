@@ -531,7 +531,7 @@ button {
 }
 
 .ratingNumber {
-  font-size: 12px;
+  font-size: 15px;
   opacity: 0.7;
 }
 
@@ -558,4 +558,24 @@ button {
 .showMorePlaceholder {
   display: block;
   height: 34px;
+}
+
+.trendingContainer {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid blue;
+  width: 15%;
+  background-color: white;
+}
+
+.trendingContainer button {
+  background-color: yellow;
+  margin: 10px;
+}
+
+.trendingRow {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  border: 3px solid red;
 }
