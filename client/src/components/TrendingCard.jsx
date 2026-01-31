@@ -24,17 +24,20 @@ const TrendingCard = ({ movie, onSave }) => {
     <>
       <article className="trendingContainer">
         <img src={posterUrl} alt={`${movie.title} poster`} />
-        <h2>{title}</h2>
+        <h2 className="trendingTitle">{title}</h2>
         <p>{dateLabel || "Unknown"}</p>
-        <div className="ratingRow">
-          <RatingStars rating={stars} />
-          <span className="ratingNumber">
-            {vote_average ? vote_average.toFixed(1) : "—"}
-          </span>
+        <div className="cardFooter">
+          <div className="ratingRow">
+            <RatingStars rating={stars} />
+            <span className="ratingNumber">
+              {vote_average ? vote_average.toFixed(1) : "—"}
+            </span>
+          </div>
+
+          <button type="button" onClick={() => onSave(movie)}>
+            Save
+          </button>
         </div>
-        <button type="button" onClick={() => onSave(movie)}>
-          Save
-        </button>
       </article>
     </>
   );
