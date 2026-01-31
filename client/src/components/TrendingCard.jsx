@@ -34,7 +34,17 @@ const TrendingCard = ({ movie, onSave }) => {
             </span>
           </div>
 
-          <button type="button" onClick={() => onSave(movie)}>
+          {/* <button type="button" onClick={() => onSave(movie)}>
+            Save
+          </button> */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onSave(movie);
+            }}
+          >
             Save
           </button>
         </div>
