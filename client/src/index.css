@@ -566,16 +566,18 @@ button {
   border: 1px solid blue;
   width: 15%;
   background-color: white;
+  padding: 12px;
+  margin: 12px;
 }
 
 .trendingContainer button {
   background-color: yellow;
-  margin: 10px;
+  margin-top: auto;
 }
 
 .trendingRow {
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 10px;
   border: 3px solid red;
 }

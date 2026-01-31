@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import TrendingCard from "../components/TrendingCard";
+import toast from "react-hot-toast";
 
 const HomePage = () => {
   const [moviesTrending, setMoviesTrending] = useState([]);
@@ -33,11 +34,52 @@ const HomePage = () => {
     fetchTrending();
   }, []);
 
+  const handleSaveTrendingMovie = async (movie) => {
+    try {
+      const res = await fetch("http://localhost:5050/api/v1/watchlist", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tmdbId: movie.id,
+          title: movie.title,
+          poster_path: movie.poster_path,
+          overview: movie.overview,
+          release_date: movie.release_date,
+          vote_average: movie.vote_average,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Save failed:", data);
+        toast.error(data.error || "Failed to save");
+        return;
+      }
+
+      if (data.message === "Already in watchlist") {
+        toast("Already in your watchlist", { icon: "📌" });
+      } else {
+        toast.success("Added to watchlist!");
+      }
+    } catch (err) {
+      console.error("Network error:", err);
+      toast.error("Network error saving movie");
+    }
+  };
+
   return (
     <>
       <h1>Trending Movies</h1>
       <div className="trendingRow">
-        <TrendingCard />
+        {moviesTrending.map((movie) => (
+          <TrendingCard
+            key={movie.id}
+            movie={movie}
+            onSave={handleSaveTrendingMovie}
+          />
+        ))}
       </div>
     </>
   );
