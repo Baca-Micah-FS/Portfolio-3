@@ -2,7 +2,6 @@ import RatingStars from "./RatingStars";
 import { getStarRating } from "../utils/formatRating";
 
 const TrendingCard = ({ movie, onSave }) => {
-  // movie could be a Movie OR a TV Show result from TMDB
   const title = movie.title || movie.name || "Untitled";
   const rawDate = movie.release_date || movie.first_air_date;
 

@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Route, Routes } from "react-router-dom";
 import MoviesPage from "./pages/MoviesPage";
-import TvShows from "./pages/TvShowsPage";
+import TvShowsPage from "./pages/TvShowsPage";
 import MusicPage from "./pages/MusicPage";
 import PodcastPage from "./pages/PodcastPage";
 import AudioBooksPage from "./pages/AudioBooksPage";
@@ -109,7 +109,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />}></Route>
             <Route path="/movies" element={<MoviesPage />}></Route>
-            <Route path="/tv" element={<TvShows />}></Route>
+            <Route path="/tv" element={<TvShowsPage />}></Route>
             <Route path="/music" element={<MusicPage />}></Route>
             <Route path="/podcasts" element={<PodcastPage />}></Route>
             <Route path="/books" element={<AudioBooksPage />}></Route>

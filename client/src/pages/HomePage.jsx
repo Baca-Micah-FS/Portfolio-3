@@ -50,7 +50,6 @@ const HomePage = () => {
 
   const [tvScrubProgress, setTvScrubProgress] = useState(0);
 
-  // Fetch trending
   useEffect(() => {
     const tvAPI = "http://localhost:5050/api/v1/tv/trending";
     const moviesAPI = "http://localhost:5050/api/v1/movies/trending";
@@ -78,7 +77,6 @@ const HomePage = () => {
     fetchTrending();
   }, []);
 
-  // Hard restart ticker
   const hardRestartTicker = () => {
     const swiper = swiperRef.current;
     if (!swiper) return;
@@ -137,7 +135,6 @@ const HomePage = () => {
     });
   }, [tvTrending]);
 
-  // Pause
   const pauseNow = () => {
     const swiper = swiperRef.current;
     if (!swiper) return;
@@ -157,7 +154,6 @@ const HomePage = () => {
     }
   };
 
-  // TV Pause
   const pauseTvNow = () => {
     const swiper = tvSwiperRef.current;
     if (!swiper) return;
@@ -177,7 +173,6 @@ const HomePage = () => {
     }
   };
 
-  // TV Resume
   const resumeTvNow = () => {
     const swiper = tvSwiperRef.current;
     if (!swiper) return;
@@ -206,7 +201,6 @@ const HomePage = () => {
     });
   };
 
-  // Resume
   const resumeNow = () => {
     const swiper = swiperRef.current;
     if (!swiper) return;
@@ -263,7 +257,7 @@ const HomePage = () => {
     };
   }, []);
 
-  // Watchdog
+  //  watcxh for continue
   useEffect(() => {
     const id = setInterval(() => {
       const swiper = swiperRef.current;
@@ -296,7 +290,7 @@ const HomePage = () => {
     return () => clearInterval(id);
   }, [moviesTrending]);
 
-  // TV Watchdog
+  // Tv watch for conitnue
   useEffect(() => {
     const id = setInterval(() => {
       const swiper = tvSwiperRef.current;
@@ -473,7 +467,6 @@ const HomePage = () => {
     });
   };
 
-  // Save movie
   const handleSaveTrendingMovie = async (movie) => {
     try {
       const res = await fetch("http://localhost:5050/api/v1/watchlist", {
@@ -524,7 +517,6 @@ const HomePage = () => {
     }
   };
 
-  // Save TV show
   const handleSaveTrendingTv = async (show) => {
     try {
       const res = await fetch("http://localhost:5050/api/v1/watchlist", {

@@ -2,7 +2,6 @@ const axios = require("axios");
 
 const trendingMoviesController = async (req, res) => {
   try {
-    // You can choose "day" or "week". I recommend "day" for Home.
     const tmdbUrl = "https://api.themoviedb.org/3/trending/movie/day";
 
     const response = await axios.get(tmdbUrl, {

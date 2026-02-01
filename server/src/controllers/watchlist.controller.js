@@ -67,10 +67,10 @@ const addToWatchlist = async (req, res) => {
     const user = await User.findById(userId).select("watchlist");
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Normalize stored items that might be missing mediaType (older saves)
+    // Normalize stored items that might be missing mediaType test
     const alreadySaved = (user.watchlist || []).some((m) => {
       const storedId = Number(m.tmdbId);
-      const storedType = String(m.mediaType || "movie"); // default old items to movie
+      const storedType = String(m.mediaType || "movie");
       return storedId === incomingId && storedType === mediaType;
     });
 
@@ -83,7 +83,7 @@ const addToWatchlist = async (req, res) => {
     }
 
     user.watchlist.push({
-      tmdbId: incomingId, // store normalized number
+      tmdbId: incomingId,
       mediaType,
       title,
       poster_path,
@@ -135,7 +135,7 @@ const removeFromWatchlist = async (req, res) => {
 
     const idx = list.findIndex((m) => {
       const storedId = Number(m.tmdbId);
-      const storedType = String(m.mediaType || "movie"); // old items default to movie
+      const storedType = String(m.mediaType || "movie");
 
       if (incomingType) {
         return storedId === incomingId && storedType === incomingType;
@@ -147,7 +147,7 @@ const removeFromWatchlist = async (req, res) => {
       return res.status(404).json({ error: "Item not found in watchlist" });
     }
 
-    // Remove exactly one matching item (important if duplicates already exist)
+    // Remove exactly one matching item no mas
     list.splice(idx, 1);
     user.watchlist = list;
 

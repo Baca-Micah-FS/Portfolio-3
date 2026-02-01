@@ -86,9 +86,10 @@ const WatchListPage = () => {
 
       <div className="watchlistStatus">
         {/* {loading && <p>Loading…</p>} */}
-        {!loading && movieItems.length === 0 && tvItems.length === 0 && (
+        {/* {!loading && movieItems.length === 0 && tvItems.length === 0 && (
           <p>No saved movies yet.</p>
-        )}
+        )} */}
+        {!loading && movieItems.length === 0 && <p>No saved movies yet.</p>}
       </div>
 
       {!loading && movieItems.length > 0 && (

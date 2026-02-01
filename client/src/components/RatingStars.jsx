@@ -1,5 +1,4 @@
 import { FaStar, FaRegStar } from "react-icons/fa";
-// import "./RatingStars.css";
 
 const RatingStars = ({ rating }) => {
   const stars = [];

@@ -522,6 +522,133 @@ button {
   color: var(--ivory);
 }
 
+.loginHero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  gap: 48px;
+  padding: 64px;
+  background: radial-gradient(
+      circle at top left,
+      rgba(89, 95, 57, 0.25),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(27, 27, 27, 0.35),
+      transparent 50%
+    ),
+    linear-gradient(135deg, var(--color-bg), var(--color-surface));
+
+  color: var(--color-text);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+  transition: background-image 0.8s ease-in-out;
+}
+
+.loginHero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  /* Dark overlay and soft  */
+  background: radial-gradient(
+      circle at top left,
+      rgba(0, 0, 0, 0.35),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(0, 0, 0, 0.55),
+      transparent 60%
+    ),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.35));
+
+  pointer-events: none;
+}
+
+.loginHero__content {
+  max-width: 560px;
+}
+
+.loginHero__title {
+  font-size: clamp(3rem, 5vw, 4rem);
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+
+.loginHero__subtitle {
+  font-size: 1.25rem;
+  color: var(--color-muted-text);
+  margin-bottom: 24px;
+}
+
+.loginHero__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.loginHero__list li {
+  font-size: 1.05rem;
+  margin-bottom: 12px;
+  padding-left: 22px;
+  position: relative;
+}
+
+.loginHero__list li::before {
+  content: "▶";
+  position: absolute;
+  left: 0;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.loginHero__panel {
+  display: flex;
+  justify-content: center;
+}
+
+.loginHero__note {
+  font-size: 0.85rem;
+  color: var(--color-muted-text);
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .loginHero {
+    grid-template-columns: 1fr;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .loginHero__content {
+    margin: 0 auto;
+  }
+
+  .loginHero__panel {
+    margin-top: 32px;
+  }
+}
+
+.loginHero__content,
+.loginHero__panel {
+  position: relative;
+  z-index: 1;
+}
+
+.loginHero {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.loginHero__subtitle,
+.loginHero__note {
+  color: rgba(255, 255, 255, 0.92);
+}
+
 .ratingStars {
   display: flex;
   gap: 4px;
@@ -665,7 +792,7 @@ button {
   height: auto;
 }
 
-/* Makes the autoplay movement constant instead of easing */
+/* Makes the autoplay movement constant instead of  */
 .swiper-wrapper {
   transition-timing-function: linear !important;
 }

@@ -44,7 +44,7 @@ const Header = ({ user, onMenuClick, onLogout }) => {
       )}
 
       <MdVideoLibrary size={30} color="#595f39" />
-      <h1 className="headerTitle">Media-Hub</h1>
+      <h1 className="headerTitle">Media-Flux</h1>
 
       {user && (
         <>
