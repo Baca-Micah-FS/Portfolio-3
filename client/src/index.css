@@ -358,6 +358,11 @@ button {
   padding-left: 55px;
 }
 
+.watchlistHeader h2 {
+  font-size: 28px;
+  padding-left: 55px;
+}
+
 .watchlistStatus {
   font-weight: bold;
   font-size: 20px;

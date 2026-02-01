@@ -32,12 +32,34 @@ const addToWatchlist = async (req, res) => {
   const userId = requireSessionUser(req, res);
   if (!userId) return;
 
-  const { tmdbId, title, poster_path, overview, release_date, vote_average } =
-    req.body;
+  console.log("🔥 addToWatchlist HIT", new Date().toISOString());
 
-  if (!tmdbId || !title) {
+  const {
+    tmdbId,
+    mediaType,
+    title,
+    poster_path,
+    overview,
+    release_date,
+    vote_average,
+  } = req.body;
+
+  if (tmdbId === undefined || tmdbId === null || !title || !mediaType) {
     return res.status(400).json({
-      error: "tmdbId and title are required",
+      error: "tmdbId, title, and mediaType are required",
+    });
+  }
+
+  if (!["movie", "tv"].includes(mediaType)) {
+    return res.status(400).json({
+      error: 'mediaType must be "movie" or "tv"',
+    });
+  }
+
+  const incomingId = Number(tmdbId);
+  if (Number.isNaN(incomingId)) {
+    return res.status(400).json({
+      error: "tmdbId must be a number",
     });
   }
 
@@ -45,10 +67,12 @@ const addToWatchlist = async (req, res) => {
     const user = await User.findById(userId).select("watchlist");
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // prevent duplicates
-    const alreadySaved = (user.watchlist || []).some(
-      (m) => String(m.tmdbId) === String(tmdbId)
-    );
+    // Normalize stored items that might be missing mediaType (older saves)
+    const alreadySaved = (user.watchlist || []).some((m) => {
+      const storedId = Number(m.tmdbId);
+      const storedType = String(m.mediaType || "movie"); // default old items to movie
+      return storedId === incomingId && storedType === mediaType;
+    });
 
     if (alreadySaved) {
       return res.status(200).json({
@@ -59,7 +83,8 @@ const addToWatchlist = async (req, res) => {
     }
 
     user.watchlist.push({
-      tmdbId,
+      tmdbId: incomingId, // store normalized number
+      mediaType,
       title,
       poster_path,
       overview,
@@ -86,22 +111,45 @@ const removeFromWatchlist = async (req, res) => {
   if (!userId) return;
 
   const { tmdbId } = req.params;
+  const { mediaType } = req.query;
+
+  console.log(
+    "🔥 removeFromWatchlist HIT",
+    new Date().toISOString(),
+    req.params,
+    req.query
+  );
+
+  const incomingId = Number(tmdbId);
+  if (Number.isNaN(incomingId)) {
+    return res.status(400).json({ error: "tmdbId must be a number" });
+  }
+
+  const incomingType = mediaType ? String(mediaType) : null;
 
   try {
     const user = await User.findById(userId).select("watchlist");
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    const before = user.watchlist.length;
+    const list = user.watchlist || [];
 
-    user.watchlist = user.watchlist.filter(
-      (m) => String(m.tmdbId) !== String(tmdbId)
-    );
+    const idx = list.findIndex((m) => {
+      const storedId = Number(m.tmdbId);
+      const storedType = String(m.mediaType || "movie"); // old items default to movie
 
-    const after = user.watchlist.length;
+      if (incomingType) {
+        return storedId === incomingId && storedType === incomingType;
+      }
+      return storedId === incomingId;
+    });
 
-    if (before === after) {
-      return res.status(404).json({ error: "Movie not found in watchlist" });
+    if (idx === -1) {
+      return res.status(404).json({ error: "Item not found in watchlist" });
     }
+
+    // Remove exactly one matching item (important if duplicates already exist)
+    list.splice(idx, 1);
+    user.watchlist = list;
 
     await user.save();
 

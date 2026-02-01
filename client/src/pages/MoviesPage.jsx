@@ -35,6 +35,7 @@ const MoviesPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tmdbId: movie.id,
+          mediaType: "movie",
           title: movie.title,
           poster_path: movie.poster_path,
           overview: movie.overview,

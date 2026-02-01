@@ -6,6 +6,12 @@ const WatchListPage = () => {
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const movieItems = watchlist.filter(
+    (item) => (item.mediaType || "movie") === "movie"
+  );
+
+  const tvItems = watchlist.filter((item) => item.mediaType === "tv");
+
   const fetchWatchlist = async () => {
     try {
       setLoading(true);
@@ -36,10 +42,10 @@ const WatchListPage = () => {
     fetchWatchlist();
   }, []);
 
-  const handleRemove = async (tmdbId) => {
+  const handleRemove = async (tmdbId, mediaType) => {
     try {
       const res = await fetch(
-        `http://localhost:5050/api/v1/watchlist/${tmdbId}`,
+        `http://localhost:5050/api/v1/watchlist/${tmdbId}?mediaType=${mediaType}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -56,7 +62,13 @@ const WatchListPage = () => {
 
       // update UI immediately
       setWatchlist((prev) =>
-        prev.filter((m) => String(m.tmdbId) !== String(tmdbId))
+        prev.filter(
+          (m) =>
+            !(
+              String(m.tmdbId) === String(tmdbId) &&
+              String(m.mediaType || "movie") === String(mediaType)
+            )
+        )
       );
       toast.success("Removed from watchlist");
     } catch (err) {
@@ -69,31 +81,69 @@ const WatchListPage = () => {
     <section className="watchlistPage">
       <div className="watchlistHeader">
         <h1 className="watchlistTitle">Your Watchlist</h1>
+        <h2>Movies</h2>
       </div>
 
       <div className="watchlistStatus">
         {/* {loading && <p>Loading…</p>} */}
-        {!loading && watchlist.length === 0 && <p>No saved movies yet.</p>}
+        {!loading && movieItems.length === 0 && tvItems.length === 0 && (
+          <p>No saved movies yet.</p>
+        )}
       </div>
 
-      {!loading && watchlist.length > 0 && (
+      {!loading && movieItems.length > 0 && (
         <div className="resultsGrid">
-          {watchlist.map((movie) => (
+          {movieItems.map((item) => (
             <MovieCard
-              key={movie.tmdbId}
+              key={`${item.mediaType || "movie"}-${item.tmdbId}`}
               movie={{
-                id: movie.tmdbId,
-                title: movie.title,
-                poster_path: movie.poster_path,
-                overview: movie.overview,
-                release_date: movie.release_date,
-                vote_average: movie.vote_average,
+                id: item.tmdbId,
+                title: item.title,
+                poster_path: item.poster_path,
+                overview: item.overview,
+                release_date: item.release_date,
+                vote_average: item.vote_average,
               }}
-              onAddToWatchlist={() => handleRemove(movie.tmdbId)}
+              onAddToWatchlist={() =>
+                handleRemove(item.tmdbId, item.mediaType || "movie")
+              }
               actionLabel="Remove"
               actionVariant="danger"
             />
           ))}
+        </div>
+      )}
+
+      {!loading && (
+        <div>
+          <h2 style={{ fontSize: "28px", paddingLeft: "55px" }}>TV Shows</h2>
+
+          {tvItems.length === 0 ? (
+            <div className="watchlistStatus">
+              <p>No saved TV shows yet.</p>
+            </div>
+          ) : (
+            <div className="resultsGrid">
+              {tvItems.map((item) => (
+                <MovieCard
+                  key={`${item.mediaType}-${item.tmdbId}`}
+                  movie={{
+                    id: item.tmdbId,
+                    title: item.title,
+                    poster_path: item.poster_path,
+                    overview: item.overview,
+                    release_date: item.release_date,
+                    vote_average: item.vote_average,
+                  }}
+                  onAddToWatchlist={() =>
+                    handleRemove(item.tmdbId, item.mediaType)
+                  }
+                  actionLabel="Remove"
+                  actionVariant="danger"
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </section>

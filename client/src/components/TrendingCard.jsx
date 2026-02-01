@@ -2,18 +2,19 @@ import RatingStars from "./RatingStars";
 import { getStarRating } from "../utils/formatRating";
 
 const TrendingCard = ({ movie, onSave }) => {
-  const { title, release_date, vote_average } = movie;
+  // movie could be a Movie OR a TV Show result from TMDB
+  const title = movie.title || movie.name || "Untitled";
+  const rawDate = movie.release_date || movie.first_air_date;
 
   const posterPath = movie.poster_path;
-
   const stars = getStarRating(movie.vote_average);
 
   const posterUrl = posterPath
     ? `https://image.tmdb.org/t/p/w500${posterPath}`
     : "/placeholder.png";
 
-  const dateLabel = release_date
-    ? new Date(release_date).toLocaleDateString("en-US", {
+  const dateLabel = rawDate
+    ? new Date(rawDate).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -21,35 +22,31 @@ const TrendingCard = ({ movie, onSave }) => {
     : "Unknown";
 
   return (
-    <>
-      <article className="trendingContainer">
-        <img src={posterUrl} alt={`${movie.title} poster`} />
-        <h2 className="trendingTitle">{title}</h2>
-        <p>{dateLabel || "Unknown"}</p>
-        <div className="cardFooter">
-          <div className="ratingRow">
-            <RatingStars rating={stars} />
-            <span className="ratingNumber">
-              {vote_average ? vote_average.toFixed(1) : "—"}
-            </span>
-          </div>
+    <article className="trendingContainer">
+      <img src={posterUrl} alt={`${title} poster`} />
+      <h2 className="trendingTitle">{title}</h2>
+      <p>{dateLabel}</p>
 
-          {/* <button type="button" onClick={() => onSave(movie)}>
-            Save
-          </button> */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onSave(movie);
-            }}
-          >
-            Save
-          </button>
+      <div className="cardFooter">
+        <div className="ratingRow">
+          <RatingStars rating={stars} />
+          <span className="ratingNumber">
+            {movie.vote_average ? movie.vote_average.toFixed(1) : "—"}
+          </span>
         </div>
-      </article>
-    </>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onSave(movie);
+          }}
+        >
+          Save
+        </button>
+      </div>
+    </article>
   );
 };
 

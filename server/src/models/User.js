@@ -44,6 +44,7 @@ const userSchema = new mongoose.Schema(
     watchlist: [
       {
         tmdbId: Number,
+        mediaType: { type: String, enum: ["movie", "tv"], default: "movie" },
         title: String,
         poster_path: String,
         overview: String,
