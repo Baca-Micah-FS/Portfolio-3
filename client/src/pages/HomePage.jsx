@@ -572,7 +572,7 @@ const HomePage = () => {
 
   return (
     <>
-      <h1>Trending Movies</h1>
+      <h1 style={{ paddingLeft: "25px" }}>Trending Movies</h1>
       {error && <p>{error}</p>}
 
       <div ref={tickerWrapRef} style={{ width: "100%" }}>
@@ -647,7 +647,7 @@ const HomePage = () => {
         </div>
       )}
 
-      <h1>Trending TV Shows</h1>
+      <h1 style={{ paddingLeft: "25px" }}>Trending TV Shows</h1>
 
       <div ref={tvTickerWrapRef} style={{ width: "100%" }}>
         <Swiper
