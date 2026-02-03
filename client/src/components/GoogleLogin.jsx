@@ -80,7 +80,7 @@ const GoogleLogin = ({ user }) => {
         <h1 className="loginHero__title">Your Media Hub</h1>
 
         <p className="loginHero__subtitle">
-          Movies, TV, music, podcasts, and audiobooks — all in one place.
+          Movies, TV, music, podcasts, and audiobooks - all in one place.
         </p>
 
         <ul className="loginHero__list">
