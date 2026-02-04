@@ -36,8 +36,8 @@
   --header-height: 70px;
   --header-bg: linear-gradient(
     180deg,
-    rgba(212, 213, 203, 0.97),
-    rgba(176, 178, 160, 0.97)
+    rgba(212, 213, 203, 1),
+    rgba(176, 178, 160, 1)
   );
 
   --header-icon: var(--moss);
@@ -46,8 +46,8 @@
   --drawer-width: 200px;
   --drawer-bg: var(--sage);
   --backdrop: rgba(27, 27, 27, 0.35);
-  /* --color-footer: #c0c3b6; */
-  --color-footer: #b5b8ab;
+  --color-footer: #c0c3b6;
+  /* --color-footer: #b5b8ab; */
 }
 
 body {
