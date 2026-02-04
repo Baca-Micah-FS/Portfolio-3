@@ -4,15 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 const API_URL = "http://localhost:5050/api/v1";
 
 const GoogleLogin = ({ user }) => {
-  const handleLogin = () => {
-    window.location.href = `${API_URL}/auth/login`;
-  };
-
-  if (user) return null;
-
-  // =========================
-  // HERO BACKDROP ROTATION
-  // =========================
+  // background rotation
 
   const [heroItems, setHeroItems] = useState([]);
   const [heroIndex, setHeroIndex] = useState(0);
@@ -70,9 +62,11 @@ const GoogleLogin = ({ user }) => {
     ? { backgroundImage: `url(${heroBgUrl})` }
     : undefined;
 
-  // =========================
-  // RENDER
-  // =========================
+  const handleLogin = () => {
+    window.location.href = `${API_URL}/auth/login`;
+  };
+
+  if (user) return null;
 
   return (
     <section className="loginHero" style={heroStyle}>

@@ -12,6 +12,7 @@ import PodcastPage from "./pages/PodcastPage";
 import AudioBooksPage from "./pages/AudioBooksPage";
 import WatchList from "./pages/WatchList";
 import HomePage from "./pages/HomePage";
+import Footer from "./components/Footer";
 import { Toaster } from "react-hot-toast";
 
 const API_URL = "http://localhost:5050/api/v1";
@@ -117,7 +118,7 @@ function App() {
           </Routes>
         )}
       </main>
-
+      <Footer />
       <Toaster position="bottom-center" />
     </div>
   );
