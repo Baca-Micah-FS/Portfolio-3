@@ -118,7 +118,7 @@ function App() {
           </Routes>
         )}
       </main>
-      <Footer />
+      <Footer isLoggedIn={!!user} />
       <Toaster position="bottom-center" />
     </div>
   );

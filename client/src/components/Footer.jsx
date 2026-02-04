@@ -2,9 +2,9 @@ import { MdVideoLibrary } from "react-icons/md";
 import { FaInstagram, FaFacebook } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
-const Footer = () => {
+const Footer = ({ isLoggedIn }) => {
   return (
-    <footer className="footer">
+    <footer className={`footer ${isLoggedIn ? "footerLoggedIn" : ""}`}>
       <div className="leftFooter">
         <form>
           <h3>Stay in the Loop</h3>

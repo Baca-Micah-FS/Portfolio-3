@@ -803,7 +803,7 @@ button {
   width: 100%;
   min-height: 155px;
   height: auto;
-  margin-top: 20px;
+  /* margin-top: 15px; */
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -811,6 +811,10 @@ button {
   background: var(--color-footer);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+}
+
+.footerLoggedIn {
+  margin-top: 20px;
 }
 
 .leftFooter {
