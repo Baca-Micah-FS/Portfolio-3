@@ -46,6 +46,8 @@
   --drawer-width: 200px;
   --drawer-bg: var(--sage);
   --backdrop: rgba(27, 27, 27, 0.35);
+  /* --color-footer: #c0c3b6; */
+  --color-footer: #b5b8ab;
 }
 
 body {
@@ -799,31 +801,63 @@ button {
 
 .footer {
   width: 100%;
-  height: 155px;
-  border: 1px solid red;
+  min-height: 155px;
+  height: auto;
+  margin-top: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: flex-start;
-  /* padding: 24px; */
+  background: var(--color-footer);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .leftFooter {
+  padding: 20px;
+  margin-bottom: 10px;
+  transform: translateY(-6px);
 }
 
-.rightFooter {
+.leftFooter input {
+  width: 70%;
+  height: 39px;
+  border-radius: 5px;
+  font-size: 15px;
+  margin-top: 7px;
+  margin-right: 10px;
+  padding: 5px;
+  border: none;
 }
 
+.leftFooter button {
+  padding: 9px;
+}
+
+.footerLogoRow {
+  display: flex;
+  align-items: center;
+  padding-top: 15px;
+}
 .rightFooter svg {
+  display: block;
 }
-
 .leftFooter,
 .rightFooter {
-  border: 1px dashed blue;
   display: flex;
   flex-direction: column;
 }
 
+.leftFooter h3,
+.rightFooter h3 {
+  font-size: 25px;
+}
 .socialRow {
   display: flex;
+  gap: 20px;
+}
+
+.rightFooter p {
+  margin-top: 0;
+  margin-bottom: 30px;
 }
