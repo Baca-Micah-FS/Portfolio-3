@@ -40,7 +40,7 @@ const GoogleLogin = ({ user }) => {
     fetchHero();
   }, []);
 
-  // Rotate hero image every 8 seconds
+  // Rotate hero image 8 seconds
   useEffect(() => {
     if (!heroItems.length) return;
 
@@ -80,7 +80,7 @@ const GoogleLogin = ({ user }) => {
         <ul className="loginHero__list">
           <li>Search and browse trending picks</li>
           <li>Save favorites to your watchlist</li>
-          <li>Keep everything private and synced with Google login</li>
+          <li>Keep everything personlized by logging in with Google</li>
         </ul>
       </div>
 

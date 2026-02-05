@@ -707,7 +707,8 @@ button {
   /* border: 1px solid rgba(255, 255, 255, 0.28); */
 
   width: 190px;
-  background: rgba(196, 197, 186, 0.25);
+  /* background alpha rgba changed from .25 for more of a transition from body's background */
+  background: rgba(196, 197, 186, 0.45);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   padding: 12px;
@@ -814,7 +815,7 @@ button {
 }
 
 .footerLoggedIn {
-  margin-top: 20px;
+  margin-top: 70px;
 }
 
 .leftFooter {
@@ -858,10 +859,10 @@ button {
 }
 .socialRow {
   display: flex;
-  gap: 20px;
+  gap: 25px;
 }
 
 .rightFooter p {
   margin-top: 0;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
 }
