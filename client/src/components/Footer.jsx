@@ -16,7 +16,7 @@ const Footer = ({ isLoggedIn }) => {
 
       <div className="rightFooter">
         <div className="footerLogoRow">
-          <MdVideoLibrary size={20} style={{ marginRight: "10px" }} />
+          <MdVideoLibrary size={19} style={{ marginRight: "10px" }} />
           <h3>Media-Flux</h3>
         </div>
         <p>Your Personal hub for all things media</p>
